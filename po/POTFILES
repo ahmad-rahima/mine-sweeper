@@ -1,0 +1,6 @@
+data/com.github.adr.MineSweeper.desktop.in
+data/com.github.adr.MineSweeper.appdata.xml.in
+data/com.github.adr.MineSweeper.gschema.xml
+src/main.py
+src/window.py
+src/window.ui
