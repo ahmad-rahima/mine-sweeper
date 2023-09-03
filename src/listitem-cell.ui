@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interface>
+  <template class="GtkListItem">
+
+    <property name="child">
+      <object class="GtkAspectFrame">
+        <property name="ratio">1</property>
+        <property name="obey-child">false</property>
+        <property name="vexpand">true</property>
+        <property name="hexpand">true</property>
+
+        <style>
+          <class name="cell" />
+        </style>
+
+        <property name="child">
+          <object class="GtkLabel">
+            <binding name="label">
+              <lookup name="type_char" type="MineSweeperCell">
+                <lookup name="item">GtkListItem</lookup>
+              </lookup>
+            </binding>
+          </object>
+        </property>
+      </object>
+    </property>
+
+  </template>
+</interface>

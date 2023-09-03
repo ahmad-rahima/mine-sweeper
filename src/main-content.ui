@@ -14,12 +14,36 @@
       <!-- <object class="MineSweeperStatusBar" /> -->
     </child>
     <child>
-      <!-- <object class="GtkGridView"> -->
+      <!-- <object class="GtkLabel"> -->
+      <!--   <property name="label">Just a Label</property> -->
       <!-- </object> -->
-      <object class="GtkLabel">
-        <property name="label">The real stuff</property>
-        <property name="vexpand">true</property>
-        <property name="valign">center</property>
+      <object class="GtkGridView">
+        <property name="min-columns">4</property>
+        <property name="max-columns">4</property>
+        <!-- <property name="vexpand">true</property> -->
+        <!-- <property name="hexpand">true</property> -->
+        <property name="width-request">500</property>
+
+        <style>
+          <class name="grid" />
+        </style>
+
+        <signal name="activate" handler="on_grid_activate" />
+
+        <property name="model">
+          <object class="GtkSingleSelection">
+            <property name="model" bind-source="MineSweeperMainContent" bind-property="cells" />
+
+            <signal name="selection-changed" handler="on_grid_selection" />
+          </object>
+        </property>
+
+        <property name="factory">
+          <object class="GtkBuilderListItemFactory">
+            <property name="resource">/com/github/adr/MineSweeper/listitem-cell.ui</property>
+          </object>
+        </property>
+
       </object>
     </child>
   </template>

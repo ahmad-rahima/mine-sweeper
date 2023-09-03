@@ -31,6 +31,7 @@ mine_sweeper_sources = [
   'main.py',
   'window.py',
   'main_content.py',
+  'cell.py',
 ]
 
 install_data(mine_sweeper_sources, install_dir: moduledir)

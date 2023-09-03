@@ -23,7 +23,7 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Gio, Adw
+from gi.repository import Gdk, Gtk, Gio, Adw
 from .window import MineSweeperWindow
 
 
@@ -36,6 +36,20 @@ class MineSweeperApplication(Adw.Application):
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
+
+
+    def _load_style_sheet(self):
+        style_provider = Gtk.CssProvider()
+        style_provider.load_from_resource(resource_path='/com/github/adr/MineSweeper/style.css')
+
+        display = Gdk.Display.get_default()
+        assert(display)
+        Gtk.StyleContext.add_provider_for_display(
+            display,
+            style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
 
     def do_activate(self):
         """Called when the application is activated.
