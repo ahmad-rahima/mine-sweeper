@@ -8,10 +8,11 @@
       </object>
     </property>
     <child>
-      <object class="GtkLabel">
-        <property name="label">"""The Status Bar"""</property>
+      <!-- <object class="GtkLabel"> -->
+      <!--   <property name="label">"""The Status Bar"""</property> -->
+      <!-- </object> -->
+      <object class="MineSweeperStatusBar">
       </object>
-      <!-- <object class="MineSweeperStatusBar" /> -->
     </child>
     <child>
       <!-- <object class="GtkLabel"> -->

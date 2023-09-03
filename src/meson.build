@@ -32,6 +32,7 @@ mine_sweeper_sources = [
   'window.py',
   'main_content.py',
   'cell.py',
+  'status_bar.py',
 ]
 
 install_data(mine_sweeper_sources, install_dir: moduledir)

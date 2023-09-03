@@ -23,6 +23,8 @@ from random import sample
 
 from .cell import MineSweeperCell, MineSweeperCellType
 
+from . import status_bar
+
 
 @Gtk.Template(resource_path='/com/github/adr/MineSweeper/main-content.ui')
 class MineSweeperMainContent(Gtk.Widget):

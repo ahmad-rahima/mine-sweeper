@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="MineSweeperStatusBar" parent="GtkWidget">
+
+    <style>
+      <class name="status-bar" />
+    </style>
+
+    <property name="layout-manager">
+      <object class="GtkBoxLayout">
+        <property name="spacing">8</property>
+        <!-- <property name="orientation">horizontal</property> -->
+      </object>
+    </property>
+
+    <child>
+      <object class="GtkLabel">
+        <property name="label">😼</property>
+        <property name="halign">center</property>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkLabel">
+        <property name="label">1:00</property>
+      </object>
+    </child>
+  </template>
+</interface>
