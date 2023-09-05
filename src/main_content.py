@@ -77,6 +77,8 @@ class MineSweeperMainContent(Gtk.Widget):
 
     status_bar = cast(status_bar.MineSweeperStatusBar, Gtk.Template.Child())
 
+    user_lost = False
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -93,6 +95,7 @@ class MineSweeperMainContent(Gtk.Widget):
         self.cells_column = self.settings.get_int('cells-column')
         self.cells_row = self.settings.get_int('cells-row')
         self.mines_no = self.settings.get_int('mines-no')
+        self.user_lost = False
 
         self._init_grid()
         self._init_cell_mines()
@@ -129,11 +132,15 @@ class MineSweeperMainContent(Gtk.Widget):
 
     @Gtk.Template.Callback()
     def on_grid_activate(self, gridview: Gtk.GridView, pos: int):
+        if self.user_lost:
+            return
+
         cell = cast(MineSweeperCell, self.cells.get_item(pos))
         cell.open()
 
         if cell.is_mine():
             self.emit('mine-triggered')
+            self.user_lost = True
 
         # print('Activating..', pos, '. cell: ', cell)
 
