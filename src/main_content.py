@@ -73,11 +73,18 @@ class MineSweeperMainContent(Gtk.Widget):
 
     grid_view = cast(Gtk.GridView, Gtk.Template.Child())
 
+    mine_triggered = GObject.Signal(flags=GObject.SignalFlags.RUN_LAST)
+
+    status_bar = cast(status_bar.MineSweeperStatusBar, Gtk.Template.Child())
+
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         app = Gtk.Application.get_default()
         app.create_action('reload', self.update_content)
         app.set_accels_for_action("app.reload", ['<Control>r'])
+
+        self.connect('mine-triggered', self.status_bar.add_restart_button)
 
         self.add_controller(self.gesture)
         self.gesture.connect('pressed', lambda *_: print('Pressed!'))
@@ -90,6 +97,9 @@ class MineSweeperMainContent(Gtk.Widget):
         self._init_grid()
         self._init_cell_mines()
         self._init_cell_neighbours()
+
+        # status bar
+        self.status_bar.update_content()
 
     def _init_grid(self):
         self.cells = Gio.ListStore(item_type=MineSweeperCell)
@@ -122,8 +132,8 @@ class MineSweeperMainContent(Gtk.Widget):
         cell = cast(MineSweeperCell, self.cells.get_item(pos))
         cell.open()
 
-        # if cell.is_mine():
-        #     self.emit('mine')
+        if cell.is_mine():
+            self.emit('mine-triggered')
 
         # print('Activating..', pos, '. cell: ', cell)
 

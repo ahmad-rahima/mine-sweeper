@@ -44,6 +44,7 @@ class MineSweeperStatusBar(Gtk.Widget):
     timeout_id = 0
 
     SEC = 1
+    restart_button_added = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -53,7 +54,9 @@ class MineSweeperStatusBar(Gtk.Widget):
 
     def update_content(self):
         self._init_timer()
-        self.box.remove(self.restart_button)
+
+        if self.restart_button_added:
+            self.box.remove(self.restart_button)
 
     def update_timer(self):
         self.elapsed_time += self.SEC
@@ -70,5 +73,6 @@ class MineSweeperStatusBar(Gtk.Widget):
             GLib.source_remove(self.timeout_id)
         self.timeout_id = GLib.timeout_add_seconds(self.SEC, self.update_timer)
 
-    def add_restart_button(self):
+    def add_restart_button(self, _widget):
+        self.restart_button_added = True
         self.box.append(self.restart_button)

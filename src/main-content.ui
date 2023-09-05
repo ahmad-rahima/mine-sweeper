@@ -16,7 +16,7 @@
       <!-- <object class="GtkLabel"> -->
       <!--   <property name="label">"""The Status Bar"""</property> -->
       <!-- </object> -->
-      <object class="MineSweeperStatusBar">
+      <object class="MineSweeperStatusBar" id="status_bar">
       </object>
     </child>
 
