@@ -41,10 +41,15 @@ class MineSweeperStatusBar(Gtk.Widget):
     )
 
     box = cast(Gtk.Box, Gtk.Template.Child())
-    timeout_id = 0
 
     SEC = 1
     restart_button_added = False
+    timeout_id = 0
+    face = GObject.Property(nick="Face",
+                            blurb="The face showen in the top status bar.",
+                            flags=GObject.ParamFlags.READWRITE,
+                            type=str,
+                            default='😼')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -54,7 +59,7 @@ class MineSweeperStatusBar(Gtk.Widget):
 
     def update_content(self):
         self._init_timer()
-
+        self.face = '😼'
         if self.restart_button_added:
             self.box.remove(self.restart_button)
 
@@ -75,4 +80,5 @@ class MineSweeperStatusBar(Gtk.Widget):
 
     def add_restart_button(self, _widget):
         self.restart_button_added = True
+        self.face = '😿'
         self.box.append(self.restart_button)

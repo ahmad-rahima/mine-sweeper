@@ -10,9 +10,10 @@ SignalListItemFactory actually might be a valid work arround..
 * DONE Better status bar
 * Better shortcuts
 ** Shortcuts window
-* Save settings (width & height & mines configs)
+* DONE Save settings (width & height & mines configs)
 * DONE Fixed size for cells (char size is affecting!)
 just add padding as px
 * DONE Change MinesType bits
 * DONE Same color headerbar
 * Complete game logic, win, lose, etc..
+* Add flags!

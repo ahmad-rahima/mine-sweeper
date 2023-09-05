@@ -18,7 +18,7 @@
 
         <child>
           <object class="GtkLabel">
-            <property name="label">😼</property>
+            <property name="label" bind-source="MineSweeperStatusBar" bind-property="face" />
             <property name="halign">center</property>
           </object>
         </child>
