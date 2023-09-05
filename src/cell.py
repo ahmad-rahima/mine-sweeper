@@ -57,6 +57,8 @@ class MineSweeperCell(GObject.Object):
         #     return ''
 
             # return self.type >> 4
+        if self.is_checked():
+            return '🚩'
         if self.is_closed():
             return ' '
         if self.is_mine():
@@ -87,11 +89,22 @@ class MineSweeperCell(GObject.Object):
         self.notify('type_char')
 
     def open(self) -> None:
+        self._uncheck()
         self.type |= MineSweeperCellType.OPEN
         self.notify('type_char')
 
+    def check(self) -> None:
+        self.type ^= MineSweeperCellType.CHECKED
+        self.notify('type_char')
+
+    def _uncheck(self) -> None:
+        self.type &= ~MineSweeperCellType.CHECKED
+
     def is_open(self) -> bool:
         return bool(self.type & MineSweeperCellType.OPEN)
+
+    def is_checked(self) -> bool:
+        return bool(self.type & MineSweeperCellType.CHECKED)
 
     def is_empty(self) -> bool:
         return not self.is_mine()

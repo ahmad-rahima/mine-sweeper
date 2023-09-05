@@ -19,7 +19,7 @@
 from enum import Enum, auto
 from functools import reduce
 from typing import Iterable, cast
-from gi.repository import GObject, Gtk, Gio
+from gi.repository import GObject, Gdk, Gtk, Gio
 from random import sample
 
 from .cell import MineSweeperCell, MineSweeperCellType
@@ -79,6 +79,8 @@ class MineSweeperMainContent(Gtk.Widget):
         default=3
     )
 
+    selected_cell: MineSweeperCell | None = None
+
     grid_view = cast(Gtk.GridView, Gtk.Template.Child())
 
     mine_triggered = GObject.Signal(flags=GObject.SignalFlags.RUN_LAST)
@@ -99,8 +101,9 @@ class MineSweeperMainContent(Gtk.Widget):
         self.connect('mine-triggered', self.status_bar.on_user_lost)
         self.connect('all-cells-open', self.status_bar.on_user_won)
 
-        self.add_controller(self.gesture)
-        self.gesture.connect('pressed', lambda *_: print('Pressed!'))
+        event_ctrl = Gtk.EventControllerKey()
+        event_ctrl.connect('key-pressed', self.on_key_pressed)
+        self.grid_view.add_controller(event_ctrl)
 
     def update_content(self, _, __):
         self.cells_column = self.settings.get_int('cells-column')
@@ -116,6 +119,11 @@ class MineSweeperMainContent(Gtk.Widget):
 
         # status bar
         self.status_bar.update_content()
+
+    def on_key_pressed(self, _event_ctrl, keyval, keycode, _state):
+        if (keyval == Gdk.KEY_Shift_R and self.selected_cell and
+            self.user_status is UserStatus.ON):
+            self.selected_cell.check()
 
     def _init_grid(self):
         self.cells = Gio.ListStore(item_type=MineSweeperCell)
@@ -168,5 +176,4 @@ class MineSweeperMainContent(Gtk.Widget):
             pos: int,
             n_items: int
     ):
-        pass
-        # print('Selecting..')
+        self.selected_cell = selection_model.props.selected_item
