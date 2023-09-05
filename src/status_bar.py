@@ -43,7 +43,7 @@ class MineSweeperStatusBar(Gtk.Widget):
     box = cast(Gtk.Box, Gtk.Template.Child())
 
     SEC = 1
-    restart_button_added = False
+    restart = False
     timeout_id = 0
     face = GObject.Property(nick="Face",
                             blurb="The face showen in the top status bar.",
@@ -60,8 +60,9 @@ class MineSweeperStatusBar(Gtk.Widget):
     def update_content(self):
         self._init_timer()
         self.face = '😼'
-        if self.restart_button_added:
+        if self.restart:
             self.box.remove(self.restart_button)
+            self.remove_css_class('failed')
 
     def update_timer(self):
         self.elapsed_time += self.SEC
@@ -79,6 +80,10 @@ class MineSweeperStatusBar(Gtk.Widget):
         self.timeout_id = GLib.timeout_add_seconds(self.SEC, self.update_timer)
 
     def add_restart_button(self, _widget):
-        self.restart_button_added = True
+        self.restart = True
         self.face = '😿'
         self.box.append(self.restart_button)
+        self.add_css_class('failed')
+        if self.timeout_id:
+            GLib.source_remove(self.timeout_id)
+            self.timeout_id = 0

@@ -5,6 +5,7 @@
     transition: opacity 0.5s ease;
 }
 
+
 .grid {
     padding: 8px;
 }
@@ -17,6 +18,10 @@
     padding: 1em;
     font-size: 2em;
     background-color: darker(@accent_color);
+}
+
+.status-bar.failed {
+    background-color: @destructive_color;
 }
 
 .timer-label {
