@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from enum import Enum, auto
 from functools import reduce
 from typing import Iterable, cast
 from gi.repository import GObject, Gtk, Gio
@@ -24,6 +25,13 @@ from random import sample
 from .cell import MineSweeperCell, MineSweeperCellType
 
 from . import status_bar
+
+
+class UserStatus(Enum):
+    INVALID = auto()
+    LOST = auto()
+    WON = auto()
+    ON = auto()
 
 
 @Gtk.Template(resource_path='/com/github/adr/MineSweeper/main-content.ui')
@@ -74,10 +82,12 @@ class MineSweeperMainContent(Gtk.Widget):
     grid_view = cast(Gtk.GridView, Gtk.Template.Child())
 
     mine_triggered = GObject.Signal(flags=GObject.SignalFlags.RUN_LAST)
+    all_cells_open = GObject.Signal(flags=GObject.SignalFlags.RUN_LAST)
 
     status_bar = cast(status_bar.MineSweeperStatusBar, Gtk.Template.Child())
 
-    user_lost = False
+    user_status = UserStatus.INVALID
+    cells_open = 0
 
 
     def __init__(self, **kwargs):
@@ -86,7 +96,8 @@ class MineSweeperMainContent(Gtk.Widget):
         app.create_action('reload', self.update_content)
         app.set_accels_for_action("app.reload", ['<Control>r'])
 
-        self.connect('mine-triggered', self.status_bar.add_restart_button)
+        self.connect('mine-triggered', self.status_bar.on_user_lost)
+        self.connect('all-cells-open', self.status_bar.on_user_won)
 
         self.add_controller(self.gesture)
         self.gesture.connect('pressed', lambda *_: print('Pressed!'))
@@ -95,7 +106,9 @@ class MineSweeperMainContent(Gtk.Widget):
         self.cells_column = self.settings.get_int('cells-column')
         self.cells_row = self.settings.get_int('cells-row')
         self.mines_no = self.settings.get_int('mines-no')
-        self.user_lost = False
+        self.user_status = UserStatus.ON
+        self.cells_open = 0
+        self.max_cells_open = self.cells_column * self.cells_row - self.mines_no
 
         self._init_grid()
         self._init_cell_mines()
@@ -132,15 +145,19 @@ class MineSweeperMainContent(Gtk.Widget):
 
     @Gtk.Template.Callback()
     def on_grid_activate(self, gridview: Gtk.GridView, pos: int):
-        if self.user_lost:
+        if self.user_status is not UserStatus.ON:
             return
 
         cell = cast(MineSweeperCell, self.cells.get_item(pos))
         cell.open()
+        self.cells_open += 1
 
         if cell.is_mine():
             self.emit('mine-triggered')
-            self.user_lost = True
+            self.user_status = UserStatus.LOST
+        elif self.cells_open == self.max_cells_open:
+            self.emit('all-cells-open')
+            self.user_status = UserStatus.WON
 
         # print('Activating..', pos, '. cell: ', cell)
 
@@ -151,4 +168,5 @@ class MineSweeperMainContent(Gtk.Widget):
             pos: int,
             n_items: int
     ):
-        print('Selecting..')
+        pass
+        # print('Selecting..')
