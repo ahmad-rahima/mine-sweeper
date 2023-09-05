@@ -3,19 +3,28 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="MineSweeperWindow" parent="AdwApplicationWindow">
-    <!-- <property name="default-width">600</property> -->
-    <!-- <property name="default-height">300</property> -->
     <child>
       <object class="GtkBox">
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkHeaderBar" id="header_bar">
+            <child type="start">
+              <object class="GtkButton" id="reload_btn">
+                <property name="icon-name">update-symbolic</property>
+                <property name="action-name">app.reload</property>
+              </object>
+            </child>
+
             <child type="end">
               <object class="GtkMenuButton">
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">primary_menu</property>
               </object>
             </child>
+
+            <style>
+              <class name="flat" />
+            </style>
           </object>
         </child>
         <child>
@@ -29,7 +38,28 @@
       </object>
     </child>
   </template>
+
   <menu id="primary_menu">
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">Configuration</attribute>
+        <item>
+          <attribute name="label" translatable="yes">4x4x3</attribute>
+          <attribute name="action">app.configuration_4x4x3</attribute>
+        </item>
+
+        <item>
+          <attribute name="label" translatable="yes">8x8x10</attribute>
+          <attribute name="action">app.configuration_8x8x10</attribute>
+        </item>
+
+        <item>
+          <attribute name="label" translatable="yes">16x16x40</attribute>
+          <attribute name="action">app.configuration_16x16x40</attribute>
+        </item>
+      </submenu>
+    </section>
+
     <section>
       <item>
         <attribute name="label" translatable="yes">_Preferences</attribute>
@@ -45,4 +75,5 @@
       </item>
     </section>
   </menu>
+
 </interface>

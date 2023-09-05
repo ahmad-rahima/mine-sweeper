@@ -44,44 +44,74 @@ class MineSweeperMainContent(Gtk.Widget):
                              type=Gio.ListStore,
                              flags=GObject.ParamFlags.READWRITE)
 
-    # TODO: change this later to settings
-    WIDTH = 4
-    HEIGHT = 4
-    MINES_NO = 3
     gesture = Gtk.GestureLongPress(delay_factor=1)
+    settings = Gio.Settings(schema_id="com.github.adr.MineSweeper")
+
+    cells_column = GObject.Property(
+        nick='Cells Column',
+        blurb='The number of cells per column',
+        type=int,
+        flags=GObject.ParamFlags.READWRITE,
+        default=4
+    )
+
+    cells_row = GObject.Property(
+        nick='Cells Row',
+        blurb='The number of cells per row',
+        type=int,
+        flags=GObject.ParamFlags.READWRITE,
+        default=4
+    )
+
+    mines_no = GObject.Property(
+        nick='Mines NO',
+        blurb='The number of mines in the grid.',
+        type=int,
+        flags=GObject.ParamFlags.READWRITE,
+        default=3
+    )
+
+    grid_view = cast(Gtk.GridView, Gtk.Template.Child())
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        app = Gtk.Application.get_default()
+        app.create_action('reload', self.update_content)
+        app.set_accels_for_action("app.reload", ['<Control>r'])
+
+        self.add_controller(self.gesture)
+        self.gesture.connect('pressed', lambda *_: print('Pressed!'))
+
+    def update_content(self, _, __):
+        self.cells_column = self.settings.get_int('cells-column')
+        self.cells_row = self.settings.get_int('cells-row')
+        self.mines_no = self.settings.get_int('mines-no')
 
         self._init_grid()
         self._init_cell_mines()
         self._init_cell_neighbours()
-        self.add_controller(self.gesture)
-        self.gesture.connect('pressed', lambda *_: print('Pressed!'))
-
 
     def _init_grid(self):
         self.cells = Gio.ListStore(item_type=MineSweeperCell)
-        for _ in range(self.WIDTH * self.HEIGHT):
+        for _ in range(self.cells_column * self.cells_row):
             cell = MineSweeperCell()
-            cell.type = (MineSweeperCellType.EMPTY.value |
-                         MineSweeperCellType.CLOSED.value)
+            cell.type = 0
             self.cells.append(cell)
 
     def _init_cell_mines(self):
-        for cell in sample(list(self.cells), k=self.MINES_NO):
+        for cell in sample(list(self.cells), k=self.props.mines_no):
             cell.fill_mine()
 
     def _init_cell_neighbours(self):
-        for i in range(self.WIDTH):
-            for j in range(self.HEIGHT):
-                cell = cast(MineSweeperCell, self.cells.get_item(j * self.WIDTH + i))
+        for i in range(self.cells_column):
+            for j in range(self.cells_row):
+                cell = cast(MineSweeperCell, self.cells.get_item(j * self.cells_column + i))
                 assert cell, "None is not valid for Cell."
 
-                mines = [self.cells.get_item(j * self.WIDTH + i)
-                         for _i in range(max(i-1, 0), min(i+2, self.WIDTH))
-                         for _j in range(max(j-1, 0), min(j+2, self.HEIGHT))
-                         if self.cells.get_item(_j * self.WIDTH + _i).is_mine()]
+                mines = [self.cells.get_item(j * self.cells_column + i)
+                         for _i in range(max(i-1, 0), min(i+2, self.cells_column))
+                         for _j in range(max(j-1, 0), min(j+2, self.cells_row))
+                         if self.cells.get_item(_j * self.cells_column + _i).is_mine()]
                 mines_no = len(mines)
                 assert mines_no >= 0, 'Mines number at least is 0.'
 
@@ -92,10 +122,10 @@ class MineSweeperMainContent(Gtk.Widget):
         cell = cast(MineSweeperCell, self.cells.get_item(pos))
         cell.open()
 
-        # if (cell.type >> 4) == MineSweeperCellType.MINE:
-        #     print('You Lose!')
+        # if cell.is_mine():
+        #     self.emit('mine')
 
-        print('Activating..', pos, '. cell: ', cell)
+        # print('Activating..', pos, '. cell: ', cell)
 
     @Gtk.Template.Callback()
     def on_grid_selection(
@@ -104,4 +134,4 @@ class MineSweeperMainContent(Gtk.Widget):
             pos: int,
             n_items: int
     ):
-            print('Selecting..')
+        print('Selecting..')

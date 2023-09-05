@@ -7,6 +7,8 @@
     <file preprocess="xml-stripblanks">listitem-cell.ui</file>
     <file preprocess="xml-stripblanks">status-bar.ui</file>
 
+    <file>light_style.css</file>
+    <file>dark_style.css</file>
     <file>style.css</file>
   </gresource>
 </gresources>

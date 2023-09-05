@@ -17,6 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from typing import cast
 from gi.repository import Adw
 from gi.repository import Gtk
 
@@ -27,5 +28,9 @@ from . import main_content
 class MineSweeperWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'MineSweeperWindow'
 
+    reload_btn = cast(Gtk.Button, Gtk.Template.Child())
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        self.activate_action('app.reload')

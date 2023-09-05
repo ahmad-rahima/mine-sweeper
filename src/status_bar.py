@@ -16,7 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from gi.repository import Gtk
+from typing import cast
+from gi.repository import GLib, GObject, Gtk
+
+import time
 
 
 @Gtk.Template(resource_path='/com/github/adr/MineSweeper/status-bar.ui')
@@ -30,5 +33,42 @@ class MineSweeperStatusBar(Gtk.Widget):
 
     __gtype_name__ = 'MineSweeperStatusBar'
 
+    timer = GObject.Property(
+        nick='Timer',
+        blurb='Seconds timer',
+        flags=GObject.ParamFlags.READWRITE,
+        type=str,
+    )
+
+    box = cast(Gtk.Box, Gtk.Template.Child())
+    timeout_id = 0
+
+    SEC = 1
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self._init_timer()
+
+        self.restart_button = Gtk.Button(label='RESTART', action_name='app.reload')
+
+    def update_content(self):
+        self._init_timer()
+        self.box.remove(self.restart_button)
+
+    def update_timer(self):
+        self.elapsed_time += self.SEC
+        self.timer = time.strftime('%M:%S', time.localtime(self.elapsed_time))
+
+        return True             # keep rolling
+
+    def _init_timer(self):
+        self.start_time = time.localtime()
+        self.elapsed_time = 0
+        self.timer = time.strftime('%M:%S', time.localtime(self.elapsed_time))
+
+        if self.timeout_id:
+            GLib.source_remove(self.timeout_id)
+        self.timeout_id = GLib.timeout_add_seconds(self.SEC, self.update_timer)
+
+    def add_restart_button(self):
+        self.box.append(self.restart_button)

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/github/adr/MineSweeper/icons/scalable/actions/">
+      <file alias="update-symbolic.svg" preprocess="xml-stripblanks">icons/update-symbolic.svg</file>
+  </gresource>
+</gresources>

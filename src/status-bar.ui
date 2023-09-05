@@ -7,23 +7,33 @@
     </style>
 
     <property name="layout-manager">
-      <object class="GtkBoxLayout">
-        <property name="spacing">8</property>
-        <!-- <property name="orientation">horizontal</property> -->
-      </object>
+      <object class="GtkBinLayout" />
     </property>
 
     <child>
-      <object class="GtkLabel">
-        <property name="label">😼</property>
+      <object class="GtkBox" id="box">
+        <property name="vexpand">true</property>
         <property name="halign">center</property>
+        <property name="spacing">16</property>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="label">😼</property>
+            <property name="halign">center</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel">
+            <style>
+              <class name="timer-label" />
+            </style>
+            <property name="label" bind-source="MineSweeperStatusBar" bind-property="timer" />
+          </object>
+        </child>
+
       </object>
     </child>
 
-    <child>
-      <object class="GtkLabel">
-        <property name="label">1:00</property>
-      </object>
-    </child>
   </template>
 </interface>

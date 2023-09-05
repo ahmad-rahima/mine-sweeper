@@ -23,7 +23,7 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import Gdk, Gtk, Gio, Adw
+from gi.repository import GLib, GObject, Gdk, Gtk, Gio, Adw
 from .window import MineSweeperWindow
 
 
@@ -36,17 +36,65 @@ class MineSweeperApplication(Adw.Application):
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
+        self.create_action('configuration_4x4x3', self.on_configuration_4x4x3_action)
+        self.create_action('configuration_8x8x10', self.on_configuration_8x8x10_action)
+        self.create_action('configuration_16x16x40', self.on_configuration_16x16x40_action)
 
+        self.settings = Gtk.Settings.get_default()
+        assert self.settings, "Default settings can not be None."
+
+        self._load_style_sheet()
 
     def _load_style_sheet(self):
+        self.display = Gdk.Display.get_default()
+        assert(self.display)
+
         style_provider = Gtk.CssProvider()
         style_provider.load_from_resource(resource_path='/com/github/adr/MineSweeper/style.css')
 
-        display = Gdk.Display.get_default()
-        assert(display)
         Gtk.StyleContext.add_provider_for_display(
-            display,
+            self.display,
             style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+        self.style_provider = Gtk.CssProvider()
+        self.settings.connect('notify::gtk-application-prefer-dark-theme', self.set_style_mode)
+
+    def on_configuration_4x4x3_action(self, widget, _):
+        settings = Gio.Settings(schema_id="com.github.adr.MineSweeper")
+        settings.set_int('cells-column', 4)
+        settings.set_int('cells-row', 4)
+        settings.set_int('mines-no', 3)
+
+        self.get_active_window().activate_action('app.reload')
+
+    def on_configuration_8x8x10_action(self, widget, _):
+        settings = Gio.Settings(schema_id="com.github.adr.MineSweeper")
+        settings.set_int('cells-column', 8)
+        settings.set_int('cells-row', 8)
+        settings.set_int('mines-no', 10)
+
+        self.get_active_window().activate_action('app.reload')
+
+    def on_configuration_16x16x40_action(self, widget, _):
+        settings = Gio.Settings(schema_id="com.github.adr.MineSweeper")
+        settings.set_int('cells-column', 16)
+        settings.set_int('cells-row', 16)
+        settings.set_int('mines-no', 40)
+
+        self.get_active_window().activate_action('app.reload')
+
+    def set_style_mode(self, settings, e):
+        dark_style = settings.get_property('gtk-application-prefer-dark-theme')
+        style_mode = 'dark' if dark_style else 'light'
+
+        self.style_provider.load_from_resource(
+            resource_path=f'/com/github/adr/MineSweeper/{style_mode}_style.css'
+        )
+        Gtk.StyleContext.add_provider_for_display(
+            self.display,
+            self.style_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 

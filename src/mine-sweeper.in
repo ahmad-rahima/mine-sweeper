@@ -42,5 +42,8 @@ if __name__ == '__main__':
     resource = Gio.Resource.load(os.path.join(pkgdatadir, 'mine-sweeper.gresource'))
     resource._register()
 
+    resource = Gio.resource_load(os.path.join(pkgdatadir, 'resources.gresource'))
+    resource._register()
+
     from mine_sweeper import main
     sys.exit(main.main(VERSION))

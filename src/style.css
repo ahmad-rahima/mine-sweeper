@@ -1,11 +1,26 @@
 
 .cell {
-    /* width: 24px; */
-    /* height: 24px; */
-    background-color: antiquewhite;
-    padding: 3em;
+    background-color: @cell_color;
+    font-size: 3em;
+    transition: opacity 0.5s ease;
 }
 
 .grid {
-    /* background-color: red; */
+    padding: 8px;
+}
+
+.cell:hover {
+    opacity: 0.7;
+}
+
+.status-bar {
+    padding: 1em;
+    font-size: 2em;
+    background-color: darker(@accent_color);
+}
+
+.timer-label {
+    background-color: @view_bg_color;
+    padding: .5em;
+    border-radius: .5em;
 }

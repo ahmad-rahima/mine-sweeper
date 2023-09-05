@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="mine-sweeper">
 	<schema id="com.github.adr.MineSweeper" path="/com/github/adr/MineSweeper/">
+		<key name="cells-column" type="i">
+			<default>4</default>
+		</key>
+		<key name="cells-row" type="i">
+			<default>4</default>
+		</key>
+		<key name="mines-no" type="i">
+			<default>3</default>
+		</key>
 	</schema>
 </schemalist>
