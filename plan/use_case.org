@@ -1,0 +1,49 @@
+#+title: MineSweeper Use Case
+
+* Select Configuration
+|-----------------------+------------------------------------------------------------------|
+| Use Case              | Select configuration                                             |
+|-----------------------+------------------------------------------------------------------|
+| Actors                | + The player                                                     |
+|                       | + The grid                                                       |
+|-----------------------+------------------------------------------------------------------|
+| Pre-Conditions        | The game is up and running.                                      |
+|-----------------------+------------------------------------------------------------------|
+| Post-Conditions       | The new grid is presented                                        |
+|-----------------------+------------------------------------------------------------------|
+| Triggers              | The player select a configuration option.                        |
+|-----------------------+------------------------------------------------------------------|
+| Goals                 | The selected configuration set.                                  |
+|-----------------------+------------------------------------------------------------------|
+| Steps of Execution    | 1. The player selects the menu.                                  |
+|                       | 2. The player chooses a configuration for the game.              |
+|                       | 3. The configuration gets set.                                   |
+|-----------------------+------------------------------------------------------------------|
+| Alternative Execution | 1. A message is presented for the player after selects the menu, |
+|                       | to discard the current game if any was on.                       |
+|-----------------------+------------------------------------------------------------------|
+
+* Selecting cell
+|-----------------------+----------------------------------------------------|
+| Use Case              | Selecting cell                                     |
+|-----------------------+----------------------------------------------------|
+| Actors                | + The player                                       |
+|                       | + The grid                                         |
+|-----------------------+----------------------------------------------------|
+| Pre-Conditions        | The game in up and running                         |
+|-----------------------+----------------------------------------------------|
+| Post-Conditions       | The cell is selected                               |
+|-----------------------+----------------------------------------------------|
+| Triggers              | The player selects a cell                          |
+|-----------------------+----------------------------------------------------|
+| Goals                 | The cell is selected                               |
+|-----------------------+----------------------------------------------------|
+| Steps of execution    | 1. The player selects a cell.                      |
+|                       | 2. the cell opens up                               |
+|                       | 3. the player is free to selects another           |
+|-----------------------+----------------------------------------------------|
+| Alternative execution | 1. if the cell is a bomb, the user loses.          |
+|                       | 2. if no more safe cells to choose, the user wins. |
+|-----------------------+----------------------------------------------------|
+
+

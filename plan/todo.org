@@ -1,0 +1,19 @@
+#+title: Todo
+
+* DONE Style (light vs dark)
+About this, it seems way more difficult that I thought!
+The ListItem is almost not accessible at all! neither in nor out!
+SignalListItemFactory actually might be a valid work arround..
+** larger font
+** opacity when open or something else
+** light dark toggle
+* DONE Better status bar
+* DONE Better shortcuts
+** Shortcuts window
+* DONE Save settings (width & height & mines configs)
+* DONE Fixed size for cells (char size is affecting!)
+just add padding as px
+* DONE Change MinesType bits
+* DONE Same color headerbar
+* DONE Complete game logic, win, lose, etc..
+* DONE Add flags!
